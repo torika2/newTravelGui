@@ -76,6 +76,7 @@ class AdminPageController extends Controller
             }
         exit();
     }
+
     public function profile()
     {
         // $commentList = TourReviews::join('users','users.id','=','tour_reviews.user_id')->get();
@@ -971,13 +972,27 @@ class AdminPageController extends Controller
     public function addWordToTranslate(Request $request)
     {
         $this->validate($request,[
-            'word' => 'required|string'
+            'word_key' => 'required|string',
+            'language_id.*' => 'required|numeric',
+            'translated_word.*' => 'required|string'
         ]);
 
-        if (Text_filed::where('field',$request->input('word'))->count() == 0) {
+        if (Text_filed::where('field',$request->input('word_key'))->count() == 0) {
             $addWord = new Text_filed;
-            $addWord->field = $request->input('word');
+            $addWord->field = $request->input('word_key');
             $addWord->save();
+
+            $word_key = Text_filed::select('tf_id')->orderby('tf_id','desc')->first();
+            $word_key_id = $word_key['tf_id'];
+
+            for ($i=0; $i < count($request->language_id,COUNT_NORMAL); $i++) { 
+                $aTW = new Text_filed_value;
+                $aTW->filed_id = $word_key_id;
+                $aTW->language_id = $request->language_id[$i];
+                $aTW->value = $request->translated_word[$i]; 
+                $aTW->save();
+            }
+
             return redirect('/admin/lang')->with('success','წარმატებით დაემატა!');
         }else{
             return redirect('/admin/lang')->with('unsuccess','სიტყვა უკვე დამატებულია!');

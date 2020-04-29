@@ -67,13 +67,13 @@ body {
                 <input type="file" name="event_image"  id="imageInput" accept="image/*"  required="required">
               </div>
                 <div id="cropbox_div">
-                    <img src="#" height="350" id="cropbox" class="img" /><br/>
+                    <img src="{{ asset('img') }}/original-image.jpeg" height="350" id="cropbox" class="img" /><br/>
                 </div>
                 <div id="btn">
                     <input type='button' id="crop" value='CROP'>
                 </div>
              {{--    <div>
-                  <img src="#" height="350" id="cropbox" class="img" />
+                  <img src="" height="350" id="cropbox" class="img" />
                 </div> --}}
 						@if($errors->any())
             <div class="alert alert-danger">
@@ -152,7 +152,7 @@ $('#cropbox').hide();
   } else {
     console.log('hi');
   }
-  }); 
+}); 
 function getPageColor() {
   var params = $('#page_params').val();
   $.ajax({

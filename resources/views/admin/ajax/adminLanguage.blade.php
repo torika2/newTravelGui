@@ -4,64 +4,32 @@
     <form id="wordForm" method="POST">
       @csrf
       <input type="hidden" id="word_id{{$words->tf_id}}" value="{{$words->tf_id}}">
-      <td><input type="text" id="words{{$words->tf_id}}" value="{{ $words->field }}" ></td>
-      <td><button id="wordAddButton{{$words->tf_id}}" class="btn btn-warning">Save</button></td>
+      <td><input type="text" class="form-control" id="words{{$words->tf_id}}" value="{{ $words->field }}" ></td>
+      {{-- <td><button id="wordAddButton{{$words->tf_id}}" class="btn btn-warning">Save</button></td> --}}
     </form>
-  <td>
-    <a href="#collapseCardExample{{ $words->tf_id }}" class="d-block card-header py-3" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="collapseCardExample" style="text-align: center;">
-      <h6 class="m-0 font-weight-bold text-primary">({{App\Lang\Text_filed_value::where('filed_id',$words->tf_id)->count()}})</h6>
-    </a>
-  </td>
-  <td>
+    <form id="translatedWordForm" method="POST">
+       @csrf
     @foreach ($translated_word as $translated)
         @if($words->tf_id == $translated->filed_id)
-    <tr class="collapse hide" id="collapseCardExample{{ $words->tf_id }}">
-{{--     <td><code>{{ $translated->tfv_id }}</code></td> --}}
-    {{-- <form method="POST" action="{{ route('editTranslatedWord') }}">
-      @csrf --}}
-      
-     <form id="translatedWordForm" method="POST">
-       @csrf
-      <td><input type="text" value="{{ $translated->value }}" id="translated_word{{$translated->tfv_id}}" value="{{ old('translated_word') }}"></td>
-      <input type="hidden" id="translated_id{{$translated->tfv_id}}" name="translated_id" value="{{$translated->tfv_id}}">
       <td>
-        <select id="language_id{{$translated->tfv_id}}" >
-          @foreach ($language as $langFlag)
-            @if ($langFlag->id == $translated->language_id)
-              <option value="{{ $langFlag->id }}" selected>{{ $langFlag->language_short_name }}</option>
-            @else
-              <option value="{{ $langFlag->id }}">{{ $langFlag->language_short_name }}</option>
-            @endif
-          @endforeach
-        </select>  
+        <input type="text" class="form-control" value="{{ $translated->value }}" id="translated_word{{$translated->tfv_id}}" value="{{ old('translated_word') }}">
+        <input type="hidden"  id="translated_id{{$translated->tfv_id}}" name="translated_id" value="{{$translated->tfv_id}}">
       </td>
-      @foreach ($language as $langFlag)
-      @if ($langFlag->id == $translated->language_id)
-      <td>
-        {{$langFlag->language_name }}
-      </td>
-      <td>
-        {{$langFlag->native_half_lang_name }}
-      </td>
-      <td>
-        {{$langFlag->native_full_lang_name }}
-      </td>
-      <td>
-        <img src="{{ asset('flagImages') }}/{{$langFlag->flag_link}}" height="30">
-      </td>
-       @endif
-      @endforeach
-      <td>
+        @endif
+    @endforeach
+
+{{-- <input type="text" class="form-control" name=""> --}}
+
+     {{--  <td>
         <button class="btn btn-success" id="translatedWordButton{{$translated->tfv_id}}">Save</button>
-      </td>
-      </tr>
-       </form>
-       <script>
+      </td> --}}
+    </form>
+<script>
 setTimeout(function(){
   console.clear();
 },3000);
 $('#translatedWordButton{{$translated->tfv_id}}').click(function(){
-    var translated_word = $('#translated_word{{$translated->tfv_id}}').val();
+  var translated_word = $('#translated_word{{$translated->tfv_id}}').val();
   var language_id = $('#language_id{{$translated->tfv_id}} option:selected').val();
   var translated_id = $('#translated_id{{$translated->tfv_id}}').val();
 
@@ -84,14 +52,8 @@ $('#translatedWordButton{{$translated->tfv_id}}').click(function(){
   });
 });
 
-
-
-
 </script>
-@endif
-      @endforeach
-  </td>
-</tr>
+
 <script>
   $('#wordAddButton{{$words->tf_id}}').click(function(){
   var word = $('#words{{$words->tf_id}}').val();
@@ -116,4 +78,5 @@ console.log(word_id);
   });
 });
 </script>
+</tr>
 @endforeach

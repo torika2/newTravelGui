@@ -101,75 +101,63 @@
     </div>
   </div>
 </div>
-<div class="card shadow mb-4 ml-2" style="margin:auto;width: 35%;display: inline-block;">
+<div class="card shadow mb-4 ml-2" style="margin:auto;width: 99%;display: inline-block;">
   <a class="d-block card-header py-3" >
     <h6 class="m-0 font-weight-bold text-secondary" style="text-align: center;">სათარგმნი სიტყვის დამატება</h6>
   </a>
   <div class="collapse show">
     <div class="card-body">
       <div class="row">
-        <form  action="{{ route('addWordToTranslate') }}" method="POST">
-          @csrf
-          <div>
-            <input  style="border-radius: 5px;" class="form-control" placeholder="ჩაწერეთ სიტყვა" type="text" name="word" required="required"> 
-          </div><br>
-          <div>
-            <button onclick="return confirm('დაემატოს სათარგმნი სიტყვა?')" class="btn btn-success"> დამატება </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-	<div class="card shadow mb-4" style="margin:auto;width: 50%;display: inline-block;">
-    <a class="d-block card-header py-3" >
-        <h6 class="m-0 font-weight-bold text-secondary" style="text-align: center;">თარგმანის დამატება</h6>
-    </a>
-    <div class="collapse show" id="collapseCardExample">
-        <div class="card-body">
-          @if ($text_filled->count() != 0)
-            <div class="row">
-                {{-- <form  action="{{ route('translate') }}" method="POST"> --}}
-                    {{-- @csrf --}}
-                    <select id="translate_word" name="translate_word_id">
-                    	@foreach ($text_filled as $translate)
-                    		<option value="{{ $translate->tf_id }}">{{ $translate->field }}</option>
-                    	@endforeach
-                      <br>
-	                </select>
-                    <div class="d-flex">
-                        	<input id="translated" style="border-radius: 5px;" class="form-control" placeholder="სათარგმნი სიტყვა" type="text" name="translated_word" required="required">   	
-                        <select id="language_id" name="language_id">
-                        	@foreach ($language as $langFlag)
-                        		<option value="{{ $langFlag->id }}">{{ $langFlag->language_short_name }}</option>
-                        	@endforeach
-                        </select>    
-                        <button  class="btn btn-primary" id="pageCreateButton"> თანხმობა </button>
-                    </div>
-                {{-- </form> --}}
+        <div class="d-flex">
+            <form class="form-data" method="POST" action="{{ route('addWordToTranslate') }}">
+              @csrf 
+            <div class="table-responsible">
+              <table >
+                <thead>
+                  <tr>
+                    <th>
+                      Word Key
+                    </th>
+                    @foreach ($language as $langFlag)
+                    <th>
+                      <label class="ml-2">{{ $langFlag->language_name }}</label>
+                    </th>
+                    @endforeach
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <input type="text" placeholder="Word key..." name="word_key" class="form-control">
+                    </td>
+                  @foreach ($language as $langFlag)
+                    <td>
+                      <input value="{{ $langFlag->id }}" type="hidden" name="language_id[]" required="required">
+                      <input type="text" class="form-control" name="translated_word[]">
+                    </td>
+                  @endforeach
+                  </tr>
+                </tbody>
+              </table>
             </div>
-          @else
-            <p>ჯერ-ჯერობით ნათარგმნი სიტყვა არარის დამატებული!</p>
-          @endif
+            <br>
+                <div>
+                  <button class="btn btn-warning">Submit</button>
+                </div>
+            </form>
         </div>
-    </div>
-</div>
-
-  <div class="card shadow mb-4">
-    <div class="card-header py-3">
-      <h6 class="m-0 font-weight-bold text-primary">ნათარგმნის ცვლილების შესატანი</h6>
-    </div>
-      <div class="card-body">
-        <div class="table-responsive">
+        </div>
+        <hr>
+        <div class="row">
+          <div class="table-responsive">
           <table class="table"width="100%" cellspacing="0">
             <thead class="thead-light">
               <tr>
                 <th>#</th>
-                <th>სათარგმნი სიტყვები</th>
-                <th></th>
-                <th  colspan="5">ნათარგმნი სიტყვები</th>
-                <th></th>
+                <th>Word key</th>
+                @foreach ($language as $langFlag)
+                  <th>{{ $langFlag->language_name }}</th>
+                @endforeach
               </tr>
             </thead>
             <tbody id="translatedOutput">
@@ -179,8 +167,10 @@
             </tbody>
           </table>
         </div>
-      </div>
+        </div>
+    </div>
   </div>
+</div>
 @endsection
 @section('script')
 	<script>
@@ -196,13 +186,14 @@ $(document).ready(function(){
   //   getLanguageInfo();
   // },15000);
 });
+
 $('#pageCreateButton').click(function(){
-  var translateWord = $('#translate_word').val();
+  var translateWord = $('#word_key').val();
   var translated = $('#translated').val();
   var langId = $('#language_id').val();
         $.ajax({
           type:'POST',
-          url:'{{ route('translate') }}',
+          url:'{{ route('addWordToTranslate') }}',
           data:{
             _token:"{{csrf_token()}}",
             'translate_word_id':translateWord,
@@ -210,13 +201,14 @@ $('#pageCreateButton').click(function(){
             'language_id':langId
           },
           success:function(){
-           	alert('წარმატებულად დაემატა!');
+            alert('წარმატებულად დაემატა!');
             getLanguageInfo();
           }
         }).fail(function(){
-          	alert('შეავსეთ მონაცემები!');
+            alert('შეავსეთ მონაცემები!');
         });
 });
+
 $('#yourImage').ready(function(){
  $('#imageInput').change(function(){
   if (this.files && this.files[0]) {
