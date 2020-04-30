@@ -56,25 +56,23 @@ body {
         <div class="card-body">
           <div class="d-block" >
             @if (\Auth::check())
-						{{-- <form id="pageImageButton"  id="file-upload"  enctype="multipart/form-data"> --}}
-							{{-- @csrf --}}
-							{{-- <input type="hidden" id="_token" name="_token" value="{{csrf_token()}}"/> --}}
-							{{-- <input type="hidden" name="params" id="image_params" value="{{ $frame->params }}"> --}}
-							{{-- <input type="file" accept="image/*" name="image_input" id="image_input" required="required"> --}}
-							{{-- <button id="pageImageButton" class="btn btn-primary">სურათის ატვირთვა</button> --}}
-						{{-- </form> --}}
               <div class="input-group control-group increment">
-                <input type="file" name="event_image"  id="imageInput" accept="image/*"  required="required">
+                <form id="imageInputForm" enctype="multipart/form-data">
+                  @csrf
+                  <input type="hidden" name="params" value="{{ $frame->params }}">
+                  <input type="file" class="form-control" name="bg_image" accept="image/jpeg"  required="required">
+                </form>
               </div>
+              <hr>
                 <div id="cropbox_div">
-                    <img src="{{ asset('img') }}/original-image.jpeg" height="350" id="cropbox" class="img" /><br/>
+                  @foreach (App\Photo\ForBgCrop::where('params',$frame->params)->get() as $img)
+                    <img src="{{ asset('forBackgroundImage') }}/{{ $img->image_url }}" {{-- height="350" --}} class="image_cropped" id="cropbox" class="img" /><br/>
+                  @endforeach
+                    
                 </div>
                 <div id="btn">
                     <input type='button' id="crop" value='CROP'>
                 </div>
-             {{--    <div>
-                  <img src="" height="350" id="cropbox" class="img" />
-                </div> --}}
 						@if($errors->any())
             <div class="alert alert-danger">
               @foreach ($errors->all() as $error)      
@@ -136,23 +134,22 @@ body {
 @section('script')
 <script>
 $('#cropbox').hide();
- $('#imageInput').on('change',function(){
-  if (this.files && this.files[0]) {
-
-      var reader = new FileReader();
-      reader.onload = function(e) { 
-        // $('#cropbox_div').html('<img src="'++'" height="350" id="cropbox" class="img" />');
-        $('#cropbox').attr('src',e.target.result);
-      };
-      reader.onerror = function(e) {
-        console.log("I AM ERROR: " + event.target.error.code);
-      };
-      reader.readAsDataURL(this.files[0]);
-      $('#cropbox').show();
-  } else {
-    console.log('hi');
-  }
-}); 
+$('#imageInputForm').on('change',function(){
+  var data = new FormData($('#imageInputForm')[0]);
+  $.ajax({
+    type:'POST',
+    url:'{{ route('forBgCrop') }}',
+    processData: false,
+    contentType: false,
+    cache: false,
+    data:data,
+    success:function(data){
+      location.reload();
+    }
+  }).fail(function(){
+    console.log('something wrong at route = forBgCrop');
+  });
+});
 function getPageColor() {
   var params = $('#page_params').val();
   $.ajax({
@@ -333,12 +330,8 @@ headers: {
           'img':img
         },
         success:function(data){
-          setTimeout(function(){
-            $("#cropped_img").attr('src',data);
-            getPageImage();
-          },4000);
-          
-          console.log(data);
+           $("#cropped_img").attr('src',data);
+           getPageImage();
         }
       }).fail(function(){
         console.log('something got wrong route=imageCrop');

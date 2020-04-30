@@ -16,7 +16,7 @@ class AdminMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (User::where('users.id',\Auth::user()->id)->where('admin',1)->count() > 0) {
+        if (Auth::user()->admin) {
              return $next($request);
         }else{
             return redirect('/home');

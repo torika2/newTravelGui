@@ -27,6 +27,7 @@ use App\Lang\Text_filed;
 use App\PageLogo;
 use App\PageButton;
 use App\PageSlogan;
+use App\Photo\ForBgCrop;
 use Illuminate\Http\Request;
 
 class AdminPageController extends Controller
@@ -766,9 +767,12 @@ class AdminPageController extends Controller
     }
     public function getPageColor($params)
     {
-        $color = Color::where('params',$params)->get();
+        $colorcount = Color::where('params',$params)->get();
+        if ($colorcount->count() > 0) {
+           $color = Color::where('params',$params)->get();
 
-        return view('admin.ajax.adminPageColor',compact('color'));
+           return view('admin.ajax.adminPageColor',compact('color'));
+        }
     }
     public function pageUpdate(Request $request)
     {
@@ -1092,5 +1096,35 @@ class AdminPageController extends Controller
         }
 
         return redirect()->route('langPage');
+    }
+
+    public function forBgCrop(Request $request)
+    {
+        $this->validate($request,[
+            'params' => 'required|string',
+            'bg_image' => 'required|image|mimes:jpeg,png,jpg'
+        ]);
+        if ($request->hasFile('bg_image')) {
+                if (ForBgCrop::where('params',$request->params)->count() > 0) {
+                    foreach (ForBgCrop::where('params',$request->params)->get() as $img){
+                        if (\File::exists(public_path('forBackgroundImage').'/'.$img->image_url)){
+                            $file = \File::delete(public_path('forBackgroundImage').'/'.$img->image_url);
+                            $second = ForBgCrop::where('params',$request->params)->delete();     
+                        }
+                    }
+                }
+                $image = uniqid().'.'.$request->file('bg_image')->getClientOriginalExtension();
+                $request->bg_image->move(public_path('forBackgroundImage'),$image);
+
+                $newBgImage = new ForBgCrop;
+                $newBgImage->params = $request->params;
+                $newBgImage->image_url = $image;
+                $newBgImage->save();
+
+                $image_public = 'public/forBackgroundImage/'.$image;
+                return $image_public;
+        }else{
+            return 'მიუთითეთ სურათის ტიპის გაფართოება!';
+        }
     }
 }

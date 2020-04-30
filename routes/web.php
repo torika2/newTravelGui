@@ -56,6 +56,7 @@ Route::post('/admin/page/logo','AdminPageController@logoUpload')->name('logoUplo
 Route::post('/admin/page/image/delete','AdminPageController@deletePageImage')->name('deletePageImage');
 Route::post('/admin/page/logo/get','AdminPageController@getPageLogos')->name('getPageLogos');
 Route::post('/admin/page/button/image','AdminPageController@createPageButton')->name('createPageButton');
+Route::post('/admin/page/background/image','AdminPageController@forBgCrop')->name('forBgCrop');
 		//PAGE COLORS
 Route::get('/admin/page/color/get/{params}','AdminPageController@getPageColor')->name('getPageColor');
 Route::post('/admin/page/color','AdminPageController@pageColor')->name('pageColor');
