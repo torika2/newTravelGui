@@ -182,9 +182,6 @@ $(document).ready(function(){
     },4000);
   });
   getLanguageInfo();
-  // setInterval(function(){
-  //   getLanguageInfo();
-  // },15000);
 });
 
 $('#pageCreateButton').click(function(){

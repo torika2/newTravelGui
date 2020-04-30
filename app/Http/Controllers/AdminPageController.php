@@ -908,9 +908,9 @@ class AdminPageController extends Controller
     public function getTranslated()
     {
         $language = Language::all();
-        $word = Text_filed::select('text_fileds.tf_id','text_fileds.field')->groupby('text_fileds.tf_id','text_fileds.field')->orderBy('tf_id','desc')->get();
+        $word = Text_filed::orderBy('tf_id','desc')->get();
         // $word = Text_filed::groupby('tf_id')->all(); 
-        $translated_word = Text_filed_value::select('tfv_id','value','language_id','filed_id')->groupby('tfv_id','value','language_id','filed_id')->orderby('tfv_id','asc')->get();
+        $translated_word = Text_filed_value::orderby('tfv_id','asc')->get();
         return view('admin.ajax.adminLanguage',compact('language','word','translated_word'));
     }
     public function langPage()
@@ -965,6 +965,18 @@ class AdminPageController extends Controller
                 $request->lang_flag->move(public_path('flagImages'),$image);
                $addLanguage->flag_link = $image;
                $addLanguage->save();
+
+            $translated_word = Text_filed_value::all();
+            if ($translated_word->count() > 1){
+                $lang = Language::select('id')->orderby('id','desc')->first();
+                    foreach (Text_filed::all() as $word){
+                        $nTW = new Text_filed_value;
+                        $nTW->filed_id = $word->tf_id;
+                        $nTW->language_id = $lang['id'];
+                        $nTW->value = "empty";
+                        $nTW->save();
+                    }
+                }
            }
         }
         return redirect()->route('langPage')->with('success','წარმატებით დაემატა!');
@@ -1004,17 +1016,26 @@ class AdminPageController extends Controller
         $this->validate($request,[
             'translated_id' => 'required|integer',
             'translated_word' => 'required|string',
-            'language_id' => 'required|integer'
         ]);
 
         if (Text_filed_value::where('tfv_id',$request->input('translated_id'))->count() == 1) {
 
-           Text_filed_value::where('tfv_id',$request->input('translated_id'))->update(['value' => $request->input('translated_word'),'language_id' => $request->language_id]);
+           Text_filed_value::where('tfv_id',$request->input('translated_id'))->update(['value' => $request->input('translated_word')]);
 
            return 'წარმატებით დაემატა!';
         }
 
         return 'ასეთი უკვე არსებობს!';
+    }
+
+    public function editWord(Request $request)
+    {
+        $this->validate($request,[
+            'word_value' => 'required|string',
+            'tf_id' => 'required|numeric'
+        ]);
+
+        Text_filed::where('tf_id',$request->tf_id)->update(['field'=>$request->word_value]);
     }
 
     public function editNotTranslatedWord(Request $request)

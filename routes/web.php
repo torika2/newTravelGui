@@ -74,6 +74,7 @@ Route::get('/admin/lang','AdminPageController@langPage')->name('langPage');
 Route::post('/admin/lang/translate','AdminPageController@translate')->name('translate');
 Route::post('/admin/lang/add/word','AdminPageController@addWordToTranslate')->name('addWordToTranslate');
 Route::post('/admin/lang/word/edit','AdminPageController@editTranslatedWord')->name('editTranslatedWord');
+Route::post('/admin/lang/word/update','AdminPageController@editWord')->name('editWord');
 Route::post('/admin/lang/add','AdminPageController@addLanguage')->name('addLanguage');
 Route::get('/admin/lang/get','AdminPageController@getTranslated')->name('getTranslated');
 Route::post('/admin/lang/edit/word','AdminPageController@editNotTranslatedWord')->name('editNotTranslatedWord');
