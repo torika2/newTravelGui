@@ -3,6 +3,7 @@
 namespace App;
 use Laravel\Passport\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
+use App\Notifications\MailresetPasswordToken;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -51,6 +52,10 @@ class User extends Authenticatable implements MustVerifyEmail
     // {
     //     return $this->hasMany('App\userTourBookmark');
     // }
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new MailResetPasswordToken($token));
+    }
     public function post()
     {
         return $this->hasMany(Post::class,'user_id');

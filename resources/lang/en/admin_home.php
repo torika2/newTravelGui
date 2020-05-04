@@ -1,9 +1,60 @@
 <?php 
 $array = [];
-foreach (App\AdminPanel\TranslateAdmin::select('translate_admin_keys.key','translate_admins.value')->join('translate_admin_keys','translate_admins.key_id','=','translate_admin_keys.key_id')->where('lang_short_name',auth::user()->user_lang)->get() as $value){
+$user_id;
+if (auth::check()){
+	$user_lang = Auth::user()->user_lang;
+
+}elseif(isset($_POST['email'])){
+	$user_lang = App\User::select('user_lang')->where('email',$_POST['email'])->first()['user_lang'];
+}else{
+	$user_lang = 'en';
+}
+foreach (App\AdminPanel\TranslateAdmin::select('translate_admin_keys.key','translate_admins.value')->join('translate_admin_keys','translate_admins.key_id','=','translate_admin_keys.key_id')->where('lang_short_name',$user_lang)->get() as $value){
 	 $array += [$value->key => $value->value];
 }
 return $array;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // LAYOUT ----------------
 		// menu
 // 	'interface_title' => 'INTERFACE',
