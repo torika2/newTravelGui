@@ -28,7 +28,7 @@
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">ღონისძიების რაოდენობა</div>
+                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">{{ __('admin_home.counted_events') }}</div>
                       <div class="row no-gutters align-items-center">
                         <div class="col-auto">
                           <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ App\Tour::all()->count() }}/100</div>
@@ -50,28 +50,11 @@
 
             <!-- Earnings (Monthly) Card Example -->
             <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-success shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-success text-uppercase mb-1">წლიური (მოგება)</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">215,000₾</div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-lari-sign fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Earnings (Monthly) Card Example -->
-            <div class="col-xl-3 col-md-6 mb-4">
               <div class="card border-left-info shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">ინფორმაცია შეავსო</div>
+                      <div class="text-xs font-weight-bold text-info text-uppercase mb-1">{{ __('admin_home.done_info') }}</div>
                       <div class="row no-gutters align-items-center">
                         <div class="col-auto">
                           <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">{{ App\UserInfo::all()->count() .'/'.App\User::all()->count()}}</div>
@@ -99,49 +82,31 @@
                 </div>
               </div>
             </div>
-
-            <!-- Pending Requests Card Example -->
-            <div class="col-xl-3 col-md-6 mb-4">
-              <div class="card border-left-warning shadow h-100 py-2">
-                <div class="card-body">
-                  <div class="row no-gutters align-items-center">
-                    <div class="col mr-2">
-                      <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">კომენტარი </div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800">{{ App\TourReviews::all()->count() }}</div>
-                    </div>
-                    <div class="col-auto">
-                      <i class="fas fa-comments fa-2x text-gray-300"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
-
               <!-- Illustrations -->
               <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                  <h6 class="m-0 font-weight-bold text-secondary">მომხმარებელი ({{ App\User::all()->count() }})</h6>
+                  <h6 class="m-0 font-weight-bold text-secondary">{{ __('admin_home.user') }} ({{ App\User::all()->count() }})</h6>
                 </div>
                 <div class="card-body">
                   <div class="table-responsive">   
                   <table class="table">
                     <thead>
                       <tr>
-                        <th>სახელი</th>
-                        <th>ელ-ფოსტა</th>
-                        <th>ენა</th>
-                        <th>ქვეყანა</th>
-                        <th>დაბადების თარიღი</th>
-                        <th>მობილური ნომერი</th>
-                        <th>ღონისძიება</th>
-                        <th>ღონისძიება მოიწონა</th>
-                        <th>ღონისძიება გააზიარა</th>
-                        <th>პოსტი</th>
-                        <th>პოსტი მოიწონა</th>
-                        <th>პოსტის გაზიარება</th>
-                        <th>პოსტის საუკეთესოში გადატანა</th>
-                        <th>ღონისძიების ავტორი</th>
+                        <th>{{ __('admin_home.user_info_name') }}</th>
+                        <th>{{ __('admin_home.user_info_email') }}</th>
+                        <th>{{ __('admin_home.user_info_language_short_name') }}</th>
+                        <th>{{ __('admin_home.user_info_country') }}</th>
+                        <th>{{ __('admin_home.user_info_b_day') }}</th>
+                        <th>{{ __('admin_home.user_info_mobile') }}</th>
+                        <th>{{ __('admin_home.user_info_event') }}</th>
+                        <th>{{ __('admin_home.user_info_event_like') }}</th>
+                        <th>{{ __('admin_home.user_info_event_share') }}</th>
+                        <th>{{ __('admin_home.user_info_post') }}</th>
+                        <th>{{ __('admin_home.user_info_post_like') }}</th>
+                        <th>{{ __('admin_home.user_info_post_share') }}</th>
+                        <th>{{ __('admin_home.user_info_post_fav') }}</th>
+                        <th>{{ __('admin_home.user_info_event_author') }}</th>
                       </tr>
                     </thead>
                     @foreach (App\User::all() as $user)
@@ -262,7 +227,7 @@
                         <div class="card-body">
                         @if ($bg_color->color != '#ffffff')
                           <b>{{$bg_color->name}}</b>
-                          <div class="text-white-55 small">ფერი :{{$bg_color->color}}</div>
+                          <div class="text-white-55 small">{{ __('admin_home.color') }} :{{$bg_color->color}}</div>
                         @else
                             <b style="color: black">{{$bg_color->name}}-ის ფერი</b>
                           <div class="text-white-55 small" style="color: black">ფერი :{{$bg_color->color}}</div>

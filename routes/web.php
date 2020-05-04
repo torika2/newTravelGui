@@ -80,6 +80,14 @@ Route::post('/admin/lang/add','AdminPageController@addLanguage')->name('addLangu
 Route::get('/admin/lang/get','AdminPageController@getTranslated')->name('getTranslated');
 Route::post('/admin/lang/edit/word','AdminPageController@editNotTranslatedWord')->name('editNotTranslatedWord');
 Route::post('/admin/lang/edit/language','AdminPageController@editLanguage')->name('editLanguage');
+		//Language User
+Route::post('/admin/lang/user','AdminPageController@choose_user_language')->name('choose_user_language');
+		//Translate Page
+Route::get('/admin/page/translate','TranslateController@translate_page')->name('translate_page');
+Route::post('/admin/page/translate/add','TranslateController@add_word')->name('add_word');
+Route::post('/admin/page/translate/word/update','TranslateController@translated_word_update')->name('translated_word_update');
+Route::get('/admin/page/get/translated','TranslateController@get_translated')->name('get_translated');
+Route::post('/admin/page/get/translate_key','TranslateController@get_translate_key')->name('get_translate_key');
 /*video*/
 Route::get("video",function(){
 	return view("videoupload");

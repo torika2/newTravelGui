@@ -11,34 +11,25 @@
       <div class="container-fluid">
 
           <!-- Page Heading -->
-          <p class="mb-4">როდესაც მომხმარებელი შექმნის/შეცვლის ან წაშლის ინფორმაციას აქ იქნება განთავსებული.</p>
+          <p class="mb-4">{{ __('admin_home.info_page_title') }}</p>
 
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
             <div class="card-header py-3">
-              <h6 class="m-0 font-weight-bold text-primary">ინფორმაცია</h6>
+              <h6 class="m-0 font-weight-bold text-primary">{{ __('admin_home.info_page_info_bool') }}</h6>
             </div>
             <div class="card-body">
               <div class="table-responsive">
                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                   <thead>
                     <tr>
-                      <th><b>სახელი</b></th>
-                      <th>კატეგორია</th>
-                      <th>ინფორმაცია (<code>იყო</code>)</th>
-                      <th>ინფორმაცია (<code>არის</code>)</th>
-                      <th>ინფორმაციის შექმნის დრო</th>
+                      <th><b>{{ __('admin_home.info_page_name') }}</b></th>
+                      <th>{{ __('admin_home.info_page_category') }}</th>
+                      <th>{{ __('admin_home.info_page_info_bool') }} (<code>{{ __('admin_home.info_page_info_was') }}</code>)</th>
+                      <th>{{ __('admin_home.info_page_info_bool') }} (<code>{{ __('admin_home.info_page_info_is') }}</code>)</th>
+                      <th>{{ __('admin_home.info_page_created_at') }}</th>
                     </tr>
                   </thead>
-                  <tfoot>
-                    <tr>
-                      <th><b>სახელი</b></th>
-                      <th>კატეგორია</th>
-                      <th>ინფორმაცია (<code>იყო</code>)</th>
-                      <th>ინფორმაცია (<code>არის</code>)</th>
-                      <th>ინფორმაციის შექმნის დრო</th>
-                    </tr>
-                  </tfoot>
                   <tbody>
                      @foreach ($log as $logs)                                 
                       <tr>

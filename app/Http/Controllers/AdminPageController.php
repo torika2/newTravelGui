@@ -6,6 +6,7 @@ use App\User;
 use Illuminate\Http\File;
 use Illuminate\Support\Facades\Storage;
 use Auth;
+use App;
 use Image;
 use redirect,input;
 use App\UserImage;
@@ -36,10 +37,27 @@ class AdminPageController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('admin');
+        // $this->middleware('lang');
+        App::setLocale('en');
     }
-    public function testPage()
+    // public function testPage()
+    // {
+    //    return view("admin.image");
+    // }
+    public function choose_user_language(Request $request)
     {
-       return view("admin.image");
+        $this->validate($request,[
+            'lang_choose' => 'required|string'
+        ]);
+        foreach (Language::all() as $lang) {
+            if ($request->lang_choose == $lang->language_short_name) {
+                if (User::where('id',Auth::id())->where('user_lang',$request->lang_choose)->count() == 0) {
+                    User::where('id',Auth::id())->update(['user_lang'=>$request->lang_choose]);
+                    return 1;
+                }
+                return 0;
+            }
+        }
     }
     public function testImage(Request $request)
     {
@@ -146,6 +164,7 @@ class AdminPageController extends Controller
     public function home()
     {
         // $tourComments = Tour::select('name','lastname','image_url','review_content','tours.tour_id as tour_id','tour_reviews.created_at as created_at')->join('tour_reviews','tours.tour_id','=','tour_reviews.tour_id')->join('users','users.id','=','tour_reviews.user_id')->join('user_images','user_images.user_id','=','tour_reviews.user_id')->where('equiped',1)->get();
+        App::setLocale(Auth::user()->user_lang);
 
         $post = Post::join('users','users.id','=','posts.user_id')->get();
 
@@ -616,6 +635,7 @@ class AdminPageController extends Controller
     }
     public function index()
     {
+
         return view('admin.cropper');
     }
     public function deleteColor(Request $request)
@@ -980,6 +1000,14 @@ class AdminPageController extends Controller
                         $nTW->value = "empty";
                         $nTW->save();
                     }
+
+                    foreach (App\AdminPanel\TranslateAdminKey::all() as $value) {
+                        $create_value = new App\AdminPanel\TranslateAdmin;
+                        $create_value->lang_short_name = $request->input('half_lang_name');
+                        $create_value->key_id = $value->key_id;
+                        $create_value->value = 'empty';
+                        $create_value->save();
+                    }     
                 }
            }
         }
