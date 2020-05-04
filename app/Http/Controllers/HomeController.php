@@ -131,14 +131,17 @@ class HomeController extends VersionController
             $new->user_id=$request->user()->id;
             
             $new->event_id=$request->input("event_id");
-            $story_id=$new->id;
             $new->save();
-
-
+            $story_id=$new->id;
             $destinationPath = public_path('uploads/photos');
             $extension = "jpg";
             $counter=0;
-            $data=[];
+            $data=[
+                "video"=>[
+                    ]
+            ];
+            $musicname=uniqid().".mp3";
+            exec(public_path().'\uploads\photos\rapidapi.exe --track=1109731 --name='.public_path()."\uploads\photos\\".$musicname);
             foreach (Input::file('photo') as $photo) {
                 $uniqid=uniqid();
                 $fileName = $uniqid.'.'.$extension;
@@ -146,12 +149,12 @@ class HomeController extends VersionController
                 $photo->move($destinationPath, $fileName);
                 $uniqid=time().uniqid();
                 $filedestination=public_path().'\uploads\photos'."\\".$fileName;
-                exec(public_path().'\ffmpeg\bin\ffmpeg.exe -i '.$filedestination.' -i '.public_path().'\uploads\photos\3.mp3 -vcodec mpeg4 -ss 0 -t 10 '.public_path('uploads\photos').'\\'.$uniqid.'clip.mp4');
-                $data=["videos"=>public_path('uploads\photos').'\\'.$uniqid.'clip.mp4'];
+                exec(public_path().'\ffmpeg\bin\ffmpeg.exe -i '.$filedestination.' -i '.public_path().'\uploads\photos\\'.$musicname.' -vcodec mpeg4 -ss 0 -t 10 '.public_path('uploads\photos').'\\'.$uniqid.'clip.mp4');
+                array_push($data["video"], public_path('uploads\photos').'\\'.$uniqid.'clip.mp4');
 
                 /*save story*/
                 $story=new Story_album;
-                $story->conent_link=public_path('uploads\photos').'\\'.$uniqid.'clip.mp4';
+                $story->content_link=public_path('uploads\photos').'\\'.$uniqid.'clip.mp4';
 
                 $story->user_id=$request->user()->id;
                 $story->story_id=$story_id;
